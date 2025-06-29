@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Birthday Surprise</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffe6f0;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+      transition: background 1s ease-in-out;
+    }
+
+    .float {
+      position: absolute;
+      font-size: 26px;
+      animation: floatUp 6s linear forwards;
+      user-select: none;
+      opacity: 0.8;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh); opacity: 1; }
+      100% { transform: translateY(-10vh); opacity: 0; }
+    }
+
+    #clickBtn, #blowBtn, #thankBtn {
+      display: none;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 14px 28px;
+      font-size: 18px;
+      background-color: #ff66b2;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      z-index: 10;
+    }
+
+    #clickBtn { top: 50%; }
+    #blowBtn { top: 75%; }
+    #thankBtn { top: 80%; }
+
+    #cakeContainer {
+      display: none;
+      position: absolute;
+      top: 65%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9;
+    }
+
+    .cake {
+      position: relative;
+      width: 200px;
+      height: auto;
+      box-shadow: 0 0 100px 35px rgba(255, 255, 100, 0.7);
+    }
+
+    .layer {
+      width: 200px;
+      height: 60px;
+      border-radius: 40px;
+      border: 2px solid #c1457b;
+      background: #ffb3c6;
+      position: relative;
+    }
+
+    .icing {
+      width: 100%;
+      height: 10px;
+      background: #fff;
+      position: absolute;
+      top: 5px;
+      border-radius: 50%;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: -8px;
+      animation: pop 1s infinite alternate;
+    }
+
+    .dot:nth-child(1) { left: 20px; animation-delay: 0s; }
+    .dot:nth-child(2) { left: 50px; animation-delay: 0.2s; }
+    .dot:nth-child(3) { left: 80px; animation-delay: 0.4s; }
+    .dot:nth-child(4) { left: 110px; animation-delay: 0.6s; }
+    .dot:nth-child(5) { left: 140px; animation-delay: 0.8s; }
+
+    @keyframes pop {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.3); }
+    }
+
+    .candle {
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 45px;
+      background: #444;
+      border-radius: 4px;
+      z-index: 5;
+    }
+
+    .flame {
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 24px;
+      background: gold;
+      border-radius: 50%;
+      animation: flicker 0.3s infinite alternate;
+      box-shadow: 0 0 45px 25px rgba(255, 255, 0, 0.9);
+      z-index: 6;
+    }
+
+    @keyframes flicker {
+      0% { transform: translateX(-50%) scale(1); opacity: 1; }
+      100% { transform: translateX(-50%) scale(1.2); opacity: 0.6; }
+    }
+
+    .fireworks {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .firework {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 0 40px 25px white;
+      animation: sparkle 2s ease-out forwards;
+    }
+
+    @keyframes sparkle {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(15); opacity: 0; }
+    }
+
+    #envelope {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      padding: 20px;
+      background: #fff0f5;
+      border: 2px solid #ff66b2;
+      border-radius: 16px;
+      box-shadow: 0 0 30px rgba(255, 102, 178, 0.6);
+      font-size: 18px;
+      color: #333;
+      line-height: 1.5;
+      z-index: 15;
+      text-align: center;
+    }
+
+    #popupMessage {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff0f5;
+      color: #c1457b;
+      font-size: 26px;
+      font-weight: bold;
+      padding: 30px;
+      border-radius: 24px;
+      box-shadow: 0 0 25px rgba(255, 105, 180, 0.8);
+      z-index: 20;
+      text-align: center;
+      max-width: 90%;
+    }
+  </style>
+</head>
+<body>
+  <button id="clickBtn">idhar click karo baby</button>
+  <button id="blowBtn">💨 Blow the Candle</button>
+  <button id="thankBtn">Thank you sweetheart 💖</button>
+
+  <div id="cakeContainer">
+    <div class="cake" id="cake">
+      <div class="candle"><div class="flame" id="flame"></div></div>
+      <div class="layer">
+        <div class="icing"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fireworks" id="fireworks"></div>
+
+  <div id="envelope">
+    happppppyyyyy birthday my kuchupuchu ❤️<br><br>
+    You are not just special, you’re <b>my</b> special.<br>
+    On your birthday, thank you for existing and being my favorite person.<br>
+    May your life be filled with laughter and love. I’m so lucky to have you.<br>
+    Today is all about you — and you deserve the world! 💌🎂
+  </div>
+
+  <div id="popupMessage">You're welcome my pretty little baby baby 💖</div>
+
+  <audio id="bgMusic" preload="auto" crossorigin="anonymous">
+    <source src="https://file.garden/aGD1vwePV3_yQKCN/Apna%20Bana%20Le%20Lyrics%20%23apnabanale%20%23song%20%23lyrics.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    let floatInterval;
+    const symbols = ['🎈','💖','💐','🎉','🌸'];
+
+    function createFloatingSymbol() {
+      const elem = document.createElement('div');
+      elem.classList.add('float');
+      elem.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+      elem.style.left = Math.random() * 100 + 'vw';
+      elem.style.animationDuration = (Math.random() * 3 + 4) + 's';
+      elem.style.fontSize = (Math.random() * 12 + 18) + 'px';
+      document.body.appendChild(elem);
+      setTimeout(() => { elem.remove(); }, 6000);
+    }
+
+    floatInterval = setInterval(createFloatingSymbol, 400);
+
+    setTimeout(() => {
+      document.getElementById('clickBtn').style.display = 'block';
+    }, 5000);
+
+    document.getElementById('clickBtn').addEventListener('click', () => {
+      const music = document.getElementById('bgMusic');
+      const promise = music.play();
+      if (promise !== undefined) {
+        promise.then(() => {
+          document.getElementById('clickBtn').style.display = 'none';
+          setTimeout(() => {
+            document.body.style.background = '#000';
+            clearInterval(floatInterval);
+            document.querySelectorAll('.float').forEach(e => e.remove());
+            document.getElementById('cakeContainer').style.display = 'block';
+            setTimeout(() => {
+              document.getElementById('blowBtn').style.display = 'block';
+            }, 1500);
+          }, 2500);
+        }).catch(() => {
+          document.getElementById('clickBtn').innerText = "tap again to play music 🎶";
+        });
+      }
+    });
+
+    document.getElementById('blowBtn').addEventListener('click', () => {
+      document.getElementById('flame').style.display = 'none';
+      document.getElementById('blowBtn').style.display = 'none';
+      document.getElementById('cake').style.boxShadow = 'none';
+      setTimeout(() => {
+        startFireworks();
+      }, 500);
+    });
+
+    function startFireworks() {
+      const fw = document.getElementById('fireworks');
+      fw.style.display = 'block';
+      let start = Date.now();
+      function launch() {
+        const now = Date.now();
+        if (now - start >= 5000) {
+          fw.style.display = 'none';
+          document.getElementById('cakeContainer').style.display = 'none';
+          document.body.style.background = '#ffe6f0';
+          document.getElementById('envelope').style.display = 'block';
+          setTimeout(() => {
+            document.getElementById('thankBtn').style.display = 'block';
+          }, 5000);
+          return;
+        }
+        for (let i = 0; i < 15; i++) {
+          const dot = document.createElement('div');
+          dot.classList.add('firework');
+          dot.style.left = Math.random() * window.innerWidth + 'px';
+          dot.style.top = Math.random() * window.innerHeight + 'px';
+          const hue = Math.random() * 360;
+          dot.style.backgroundColor = `hsl(${hue}, 100%, 95%)`;
+          dot.style.boxShadow = `0 0 40px 30px hsl(${hue}, 100%, 95%)`;
+          fw.appendChild(dot);
+          setTimeout(() => dot.remove(), 2000);
+        }
+        setTimeout(launch, 500);
+      }
+      launch();
+    }
+
+    document.getElementById('thankBtn').addEventListener('click', () => {
+      document.getElementById('popupMessage').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
